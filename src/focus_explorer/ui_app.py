@@ -282,6 +282,15 @@ class FocusExplorerApp:
         target = norm(self.path_var.get().strip())
         self.refresh_dir(target)
 
+    def copy_current_path(self) -> None:
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(self.current_dir)
+            self.root.update_idletasks()
+            self.show_status(f"Copied path: {self.current_dir}")
+        except Exception as exc:
+            self.show_status(f"Copy path failed: {exc}")
+
     def on_file_activate(self, _event=None) -> None:
         selected = self.file_list.selection()
         if not selected:

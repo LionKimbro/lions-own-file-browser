@@ -82,7 +82,7 @@ def build_ui(app) -> None:
     path_entry.pack(side="left", fill="x", expand=True, padx=(8, 4), pady=6)
     path_entry.bind("<Return>", lambda _: app.go_to_path())
 
-    tk.Button(toolbar, text="Go", command=app.go_to_path, width=6).pack(side="left", padx=(0, 4), pady=5)
+    tk.Button(toolbar, text="Path", command=app.copy_current_path, width=6).pack(side="left", padx=(0, 4), pady=5)
     tk.Button(toolbar, text="Parent", command=app.go_parent, width=8).pack(side="left", padx=(0, 4), pady=5)
     tk.Button(toolbar, text="Browse", command=app.open_browse_here, width=8).pack(side="left", padx=(0, 4), pady=5)
     tk.Button(toolbar, text="Terminal", command=app.open_terminal_here, width=9).pack(side="left", padx=(0, 8), pady=5)
