@@ -1,4 +1,4 @@
 from .cli import main
-from .ui import FocusExplorerApp
+from .ui_app import FocusExplorerApp
 
 __all__ = ["FocusExplorerApp", "main"]

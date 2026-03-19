@@ -7,11 +7,11 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import filedialog, simpledialog
 
-from . import command_bar
-from . import overlay
-from . import panes
+from . import ui_command_bar
+from . import ui_overlay
+from . import ui_panes
 from . import state
-from . import temple_dialog
+from . import ui_temple_dialog
 
 try:
     from PIL import Image, ImageTk  # type: ignore
@@ -90,7 +90,7 @@ class FocusExplorerApp:
         self.update_stack_text()
 
     def build_ui(self) -> None:
-        panes.build_ui(self)
+        ui_panes.build_ui(self)
 
     def bind_keys(self) -> None:
         self.root.bind_all("<Control-space>", self.open_command_bar)
@@ -110,13 +110,13 @@ class FocusExplorerApp:
         self.root.bind_all("<KeyPress>", self.handle_anchor_hotkeys)
 
     def show_overlay(self) -> None:
-        overlay.show_overlay(self)
+        ui_overlay.show_overlay(self)
 
     def hide_overlay(self) -> None:
-        overlay.hide_overlay(self)
+        ui_overlay.hide_overlay(self)
 
     def refresh_overlay_labels(self) -> None:
-        overlay.refresh_overlay_labels(self)
+        ui_overlay.refresh_overlay_labels(self)
 
     def format_size(self, num_bytes: int) -> str:
         units = ["B", "KB", "MB", "GB"]
@@ -455,13 +455,13 @@ class FocusExplorerApp:
         return "break"
 
     def open_command_bar(self, _event=None) -> str:
-        return command_bar.open_command_bar(self, _event)
+        return ui_command_bar.open_command_bar(self, _event)
 
     def hide_command_bar(self) -> None:
-        command_bar.hide_command_bar(self)
+        ui_command_bar.hide_command_bar(self)
 
     def run_command_bar(self, _event=None) -> str:
-        return command_bar.run_command_bar(self, _event)
+        return ui_command_bar.run_command_bar(self, _event)
 
     def sync_task_text(self) -> None:
         if not self.task_queue:
@@ -665,4 +665,4 @@ class FocusExplorerApp:
         self.show_toast(f"Next task: {self.task_text.get()}")
 
     def open_temple_window(self, _event=None) -> None:
-        temple_dialog.open_temple_window(self, _event)
+        ui_temple_dialog.open_temple_window(self, _event)

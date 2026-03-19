@@ -14,7 +14,7 @@ def hide_overlay(app) -> None:
 
 
 def refresh_overlay_labels(app) -> None:
-    from .ui import ICON_LABELS
+    from .ui_app import ICON_LABELS
 
     for key, lbl in app.overlay_labels.items():
         anchor = app.anchors.get(key)

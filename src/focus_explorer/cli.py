@@ -1,7 +1,7 @@
 import tkinter as tk
 from pathlib import Path
 
-from .ui import FocusExplorerApp, import_lionscliapp
+from .ui_app import FocusExplorerApp, import_lionscliapp
 
 
 def cmd_launch_gui(cli) -> None:

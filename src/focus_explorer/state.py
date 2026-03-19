@@ -3,7 +3,7 @@ import os
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .ui import FocusExplorerApp
+    from .ui_app import FocusExplorerApp
 
 
 def get_state_payload(app: "FocusExplorerApp") -> dict:
@@ -30,7 +30,7 @@ def save_state(app: "FocusExplorerApp") -> None:
 
 
 def load_state(app: "FocusExplorerApp") -> None:
-    from .ui import ANCHOR_KEYS, Anchor, norm
+    from .ui_app import ANCHOR_KEYS, Anchor, norm
 
     data = None
     if app.cli is not None:
