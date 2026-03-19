@@ -452,6 +452,15 @@ class FocusExplorerApp:
         if widget is self.command_entry:
             return None
 
+        # Do not steal Ctrl key combos from text-editing widgets.
+        widget_class = ""
+        try:
+            widget_class = widget.winfo_class()
+        except Exception:
+            pass
+        if widget_class in {"Entry", "TEntry", "Text", "Spinbox", "TCombobox"}:
+            return None
+
         state = int(getattr(event, "state", 0))
         ctrl_pressed = bool(state & 0x4)
         if not ctrl_pressed:
