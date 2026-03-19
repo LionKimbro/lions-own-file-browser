@@ -3,9 +3,9 @@ from pathlib import Path
 
 def show_overlay(app) -> None:
     refresh_overlay_labels(app)
-    x = app.root.winfo_rootx() + 350
+    x = app.root.winfo_rootx() + 300
     y = app.root.winfo_rooty() + 80
-    app.overlay.geometry(f"540x240+{x}+{y}")
+    app.overlay.geometry(f"640x240+{x}+{y}")
     app.overlay.deiconify()
 
 
