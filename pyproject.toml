@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "focus-explorer"
+version = "0.2.0"
+description = "Focus-aware file explorer with anchors, stack, and task strip."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "lionscliapp",
+  "Pillow",
+]
+
+[project.scripts]
+focus-explorer = "focus_explorer.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

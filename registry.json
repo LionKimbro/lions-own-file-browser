@@ -1,0 +1,47 @@
+{
+  "document": {
+    "document-id": "registry.inventory",
+    "title": "Registry",
+    "purpose": "Resource registry for this repository."
+  },
+  "registry": {
+    "agent-orientation.v1": {
+      "id": "agent-orientation.v1",
+      "purpose": "Startup instructions for agents working on this project.",
+      "location": [
+        {
+          "path": ".\\agents.json"
+        }
+      ],
+      "type": {
+        "logical": {
+          "base": "file",
+          "format": "json"
+        }
+      },
+      "title": "Agent Orientation",
+      "tags": ["agent", "orientation", "codex", "claudecode"]
+    },
+    "lions-main-registry-on-roberts-computer": {
+      "id": "lions-main-registry-on-roberts-computer",
+      "purpose": "Main local registry reference.",
+      "location": [
+        {
+          "path": "F:\\lion\\registry.json"
+        }
+      ],
+      "type": {
+        "logical": {
+          "base": "file",
+          "format": "json",
+          "encoding": "utf-8"
+        },
+        "semantic": {
+          "base": "registry"
+        }
+      },
+      "title": "Lion's Main Registry on Robert's Computer",
+      "tags": ["lionkimbro", "robert", "registry"]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+date: 2026-03-18
+title: Focus Explorer Formalization Checklist
+
+1. add docs/conversations/conversations-track.txt
+2. add specs to docs/spec
+3. edit pyproject.toml
+4. add registry metadata files
+
+9. delete this file when no longer needed

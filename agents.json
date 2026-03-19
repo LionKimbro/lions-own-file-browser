@@ -1,0 +1,32 @@
+{
+  "document": {
+    "document-id": "agent-orientation.v1",
+    "title": "Agent Orientation",
+    "purpose": "Startup guidance for code agents working in this repository.",
+    "document-template-development": "https://chatgpt.com/c/699ba321-fe30-8327-b622-ff5d5c7b1dfb"
+  },
+  "directives": {
+    "find-the-registry": {
+      "instruction": "Look for a registry.json file and treat it as an index into essential references.",
+      "rules": [
+        "If the registry references Lion's definitions file, read it.",
+        "If writing code, read Lion's programming philosophy documents first.",
+        "Do not read every resource preemptively; load only what is needed for the current task."
+      ]
+    },
+    "project-structure": {
+      "specs-location": "docs/spec/",
+      "source-location": "src/focus_explorer/",
+      "tests-location": "tests/",
+      "cli-support": "Use lionscliapp for command routing and persisted app settings.",
+      "notes": [
+        "Use standard Python package layout.",
+        "Documents should use serial numbering where appropriate."
+      ]
+    },
+    "testing": {
+      "framework": "pytest",
+      "tkinter-testing": "tkintertest"
+    }
+  }
+}
