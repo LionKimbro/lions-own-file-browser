@@ -352,6 +352,22 @@ class FocusExplorerApp:
             subprocess.Popen(["cmd", "/K", f"cd /d {path}"])
             self.show_status(f"Opened cmd in {path}")
 
+    def open_browse_here(self) -> None:
+        path = self.current_dir
+        if not os.path.isdir(path):
+            self.show_status(f"Directory not found: {path}")
+            return
+        try:
+            if sys.platform.startswith("win"):
+                os.startfile(path)  # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", path])
+            else:
+                subprocess.Popen(["xdg-open", path])
+            self.show_status(f"Opened file browser in {path}")
+        except Exception as exc:
+            self.show_status(f"Browse failed: {exc}")
+
     def open_terminal_hotkey(self, _event=None) -> str:
         self.open_terminal_here()
         return "break"
