@@ -156,24 +156,35 @@ def build_ui(app) -> None:
     )
     app.preview_label.pack(fill="both", expand=True, padx=10, pady=10)
 
-    bottom = tk.Frame(app.root, bg="#0f1319", height=130)
-    bottom.pack(side="bottom", fill="x")
-    bottom.pack_propagate(False)
+    app.bottom_frame = tk.Frame(app.root, bg="#0f1319", height=130)
+    app.bottom_frame.pack(side="bottom", fill="x")
+    app.bottom_frame.pack_propagate(False)
+
+    bottom_header = tk.Frame(app.bottom_frame, bg="#0f1319")
+    bottom_header.pack(fill="x", pady=(4, 0))
+
+    app.notes_toggle_btn = tk.Button(
+        bottom_header,
+        text="Notes ▲",
+        command=app.toggle_notes_pane,
+        width=9,
+    )
+    app.notes_toggle_btn.pack(side="right", padx=(0, 8))
 
     app.stack_var = tk.StringVar(value="Stack: []")
     stack_label = tk.Label(
-        bottom,
+        app.bottom_frame,
         textvariable=app.stack_var,
         bg="#0f1319",
         fg="#9fb3cc",
         font=("Consolas", 10),
         anchor="w",
     )
-    stack_label.pack(fill="x", padx=10, pady=(8, 2))
+    stack_label.pack(fill="x", padx=10, pady=(0, 2))
 
     app.status_var = tk.StringVar(value="Ready")
     status_label = tk.Label(
-        bottom,
+        app.bottom_frame,
         textvariable=app.status_var,
         bg="#0f1319",
         fg="#c7d6eb",
@@ -181,6 +192,31 @@ def build_ui(app) -> None:
         anchor="w",
     )
     status_label.pack(fill="x", padx=10, pady=(0, 8))
+
+    # Notes pane — initially hidden; toggle_notes_pane packs/forgets it
+    app.notes_frame = tk.Frame(app.root, bg="#0d1520", height=140)
+    app.notes_frame.pack_propagate(False)
+
+    tk.Label(
+        app.notes_frame,
+        text="Notes",
+        bg="#131c2b",
+        fg="#7a9abc",
+        font=("Segoe UI", 9, "bold"),
+        anchor="w",
+    ).pack(side="top", fill="x", ipady=3, padx=8)
+
+    app.notes_text = tk.Text(
+        app.notes_frame,
+        bg="#0d1520",
+        fg="#c8daf0",
+        insertbackground="#c8daf0",
+        relief="flat",
+        font=("Consolas", 10),
+        wrap="word",
+        undo=True,
+    )
+    app.notes_text.pack(fill="both", expand=True, padx=4, pady=(0, 4))
 
     app.toast = tk.Label(
         app.root,

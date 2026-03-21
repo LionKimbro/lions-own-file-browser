@@ -17,6 +17,10 @@ def get_state_payload(app: "FocusExplorerApp") -> dict:
             "task_queue": app.task_queue,
             "task_index": app.task_index,
         },
+        "notes": {
+            "text": app.notes_text.get("1.0", "end-1c"),
+            "open": app.notes_open,
+        },
     }
 
 
@@ -72,3 +76,12 @@ def load_state(app: "FocusExplorerApp") -> None:
         except Exception:
             app.task_index = 0
     app.sync_task_text()
+
+    notes = data.get("notes", {})
+    if isinstance(notes, dict):
+        text = notes.get("text", "")
+        if isinstance(text, str) and text:
+            app.notes_text.delete("1.0", "end")
+            app.notes_text.insert("1.0", text)
+        if notes.get("open", False):
+            app.toggle_notes_pane()

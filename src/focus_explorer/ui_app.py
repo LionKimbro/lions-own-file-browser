@@ -82,6 +82,7 @@ class FocusExplorerApp:
         self.preview_image_ref = None
 
         self.toast_after_id: str | None = None
+        self.notes_open = False
 
         self.build_ui()
         self.bind_keys()
@@ -697,6 +698,16 @@ class FocusExplorerApp:
         self.task_index = (self.task_index + 1) % len(self.task_queue)
         self.sync_task_text()
         self.show_toast(f"Next task: {self.task_text.get()}")
+
+    def toggle_notes_pane(self) -> None:
+        if self.notes_open:
+            self.notes_frame.pack_forget()
+            self.notes_open = False
+            self.notes_toggle_btn.configure(text="Notes ▲")
+        else:
+            self.notes_frame.pack(side="bottom", fill="x")
+            self.notes_open = True
+            self.notes_toggle_btn.configure(text="Notes ▼")
 
     def open_temple_window(self, _event=None) -> None:
         ui_temple_dialog.open_temple_window(self, _event)
