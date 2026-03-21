@@ -108,6 +108,8 @@ class FocusExplorerApp:
         self.root.bind_all("<KeyRelease-Control_L>", lambda _: self.hide_overlay())
         self.root.bind_all("<KeyRelease-Control_R>", lambda _: self.hide_overlay())
 
+        self.root.bind_all("<Alt-d>", self.focus_path_entry)
+        self.root.bind_all("<Control-semicolon>", lambda _: self.file_list.focus_set())
         self.root.bind_all("<KeyPress>", self.handle_anchor_hotkeys)
 
     def show_overlay(self) -> None:
@@ -718,6 +720,11 @@ class FocusExplorerApp:
         self.task_index = (self.task_index + 1) % len(self.task_queue)
         self.sync_task_text()
         self.show_toast(f"Next task: {self.task_text.get()}")
+
+    def focus_path_entry(self, _event=None) -> str:
+        self.path_entry.focus_set()
+        self.path_entry.selection_range(0, "end")
+        return "break"
 
     def toggle_notes_pane(self) -> None:
         if self.notes_open:

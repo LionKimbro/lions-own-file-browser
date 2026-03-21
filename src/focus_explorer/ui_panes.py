@@ -5,6 +5,33 @@ from tkinter import ttk
 def build_ui(app) -> None:
     app.root.configure(bg="#1c1f24")
 
+    style = ttk.Style()
+    style.theme_use("clam")
+    style.configure(
+        "Treeview",
+        background="#10141b",
+        foreground="#deebff",
+        fieldbackground="#10141b",
+        rowheight=22,
+        borderwidth=0,
+    )
+    style.configure(
+        "Treeview.Heading",
+        background="#1e242d",
+        foreground="#8ba8cc",
+        relief="flat",
+        borderwidth=0,
+    )
+    style.map(
+        "Treeview",
+        background=[("selected", "#355782")],
+        foreground=[("selected", "#e8f4ff")],
+    )
+    style.map(
+        "Treeview.Heading",
+        background=[("active", "#253040")],
+    )
+
     app.focus_strip = tk.Frame(app.root, bg="#2a313b", height=34)
     app.focus_strip.pack(side="top", fill="x")
     app.focus_strip.pack_propagate(False)
@@ -70,7 +97,7 @@ def build_ui(app) -> None:
     toolbar.pack_propagate(False)
 
     app.path_var = tk.StringVar(value=app.current_dir)
-    path_entry = tk.Entry(
+    app.path_entry = tk.Entry(
         toolbar,
         textvariable=app.path_var,
         bg="#0f1319",
@@ -79,8 +106,8 @@ def build_ui(app) -> None:
         relief="flat",
         font=("Consolas", 10),
     )
-    path_entry.pack(side="left", fill="x", expand=True, padx=(8, 4), pady=6)
-    path_entry.bind("<Return>", lambda _: app.go_to_path())
+    app.path_entry.pack(side="left", fill="x", expand=True, padx=(8, 4), pady=6)
+    app.path_entry.bind("<Return>", lambda _: app.go_to_path())
 
     tk.Button(toolbar, text="Path", command=app.copy_current_path, width=6).pack(side="left", padx=(0, 4), pady=5)
     tk.Button(toolbar, text="Parent", command=app.go_parent, width=8).pack(side="left", padx=(0, 4), pady=5)
