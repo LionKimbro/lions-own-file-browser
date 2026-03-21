@@ -47,6 +47,8 @@ ICON_LABELS = {
     "audio": "🎵",
     "video": "🎬",
     "star": "⭐",
+    "in": "⮷",
+    "out": "⮵",
     "none": "·",
 }
 
@@ -478,6 +480,7 @@ class FocusExplorerApp:
             self.show_status(f"No anchor on {key}")
             return
         self.refresh_dir(anchor.path)
+        self.file_list.focus_set()
 
     def handle_anchor_hotkeys(self, event: tk.Event) -> str | None:
         widget = event.widget
@@ -614,7 +617,7 @@ class FocusExplorerApp:
     def open_icon_picker(self, key: str) -> None:
         picker = tk.Toplevel(self.root)
         picker.title(f"Pick Icon for {key}")
-        picker.geometry("420x220")
+        picker.geometry("460x220")
         picker.transient(self.root)
         picker.grab_set()
         frame = tk.Frame(picker, padx=10, pady=10)
@@ -631,7 +634,7 @@ class FocusExplorerApp:
             btn = tk.Button(
                 grid,
                 text=f"{ICON_LABELS[icon]} {icon}",
-                width=18,
+                width=12,
                 command=lambda ic=icon: self.pick_icon_and_close(key, ic, picker),
             )
             btn.grid(row=r, column=c, padx=4, pady=4)

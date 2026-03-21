@@ -10,7 +10,7 @@ def open_command_bar(app, _event=None) -> str:
 
 def hide_command_bar(app) -> None:
     app.command_overlay.place_forget()
-    app.root.focus_set()
+    app.file_list.focus_set()
 
 
 def run_command_bar(app, _event=None) -> str:
