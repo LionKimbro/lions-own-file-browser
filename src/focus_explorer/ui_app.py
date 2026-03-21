@@ -312,6 +312,8 @@ class FocusExplorerApp:
             self.show_status(f"Copy path failed: {exc}")
 
     def on_file_activate(self, _event=None) -> None:
+        if _event is not None and (int(getattr(_event, "state", 0)) & 0x4):
+            return
         selected = self.file_list.selection()
         if not selected:
             return
@@ -461,8 +463,7 @@ class FocusExplorerApp:
             self.show_toast(f"Unanchored {key}")
             self.show_status(f"Removed anchor {key} from {current}")
         else:
-            icon = existing.icon if existing else "none"
-            self.anchors[key] = Anchor(path=current, icon=icon)
+            self.anchors[key] = Anchor(path=current, icon="none")
             leaf = Path(current).name or current
             self.show_toast(f"Anchored {key} -> {leaf}")
             self.show_status(f"Anchor {key} set to {current}")
