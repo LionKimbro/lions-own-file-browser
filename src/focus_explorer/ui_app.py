@@ -136,10 +136,26 @@ class FocusExplorerApp:
             return None
         return norm(os.path.join(self.current_dir, name))
 
+    def get_image_dimensions(self, path: str) -> tuple[int, int] | None:
+        ext = Path(path).suffix.lower()
+        if ext not in {".png", ".gif", ".jpg", ".jpeg", ".bmp", ".webp", ".ppm", ".pgm"}:
+            return None
+        try:
+            if Image is not None:
+                with Image.open(path) as img:
+                    return img.size
+            if ext in {".png", ".gif", ".ppm", ".pgm"}:
+                tk_img = tk.PhotoImage(file=path)
+                return (tk_img.width(), tk_img.height())
+        except Exception:
+            pass
+        return None
+
     def update_details_for_target(self, target: str | None) -> None:
         if not target:
             self.details_name.set("Name: -")
             self.details_type.set("Type: -")
+            self.details_dimensions.set("Dimensions: -")
             self.details_size.set("Size: -")
             self.details_modified.set("Modified: -")
             self.details_path.set("Path: -")
@@ -160,8 +176,11 @@ class FocusExplorerApp:
         except Exception:
             pass
 
+        dims = self.get_image_dimensions(target) if p.is_file() else None
+
         self.details_name.set(f"Name: {name}")
         self.details_type.set(f"Type: {kind}")
+        self.details_dimensions.set(f"Dimensions: {dims[0]} × {dims[1]}" if dims else "Dimensions: -")
         self.details_size.set(f"Size: {size}")
         self.details_modified.set(f"Modified: {modified}")
         self.details_path.set(f"Path: {target}")

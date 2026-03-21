@@ -122,6 +122,7 @@ def build_ui(app) -> None:
 
     app.details_name = tk.StringVar(value="Name: -")
     app.details_type = tk.StringVar(value="Type: -")
+    app.details_dimensions = tk.StringVar(value="Dimensions: -")
     app.details_size = tk.StringVar(value="Size: -")
     app.details_modified = tk.StringVar(value="Modified: -")
     app.details_path = tk.StringVar(value="Path: -")
@@ -129,6 +130,7 @@ def build_ui(app) -> None:
     for variable in (
         app.details_name,
         app.details_type,
+        app.details_dimensions,
         app.details_size,
         app.details_modified,
         app.details_path,
