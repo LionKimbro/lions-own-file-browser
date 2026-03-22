@@ -362,6 +362,28 @@ class FocusExplorerApp:
         self.update_details_for_target(self.file_target_from_item(next_item))
         return "break"
 
+    def on_file_list_keypress(self, event: tk.Event) -> str | None:
+        key = (event.keysym or "").lower()
+        if len(key) != 1 or not (key.isdigit() or "a" <= key <= "z"):
+            return None
+        if int(getattr(event, "state", 0)) & 0x4:  # Ctrl held
+            return None
+        items = self.file_list.get_children()
+        if not items:
+            return "break"
+        selected = self.file_list.selection()
+        current_idx = items.index(selected[0]) if selected else 0
+        n = len(items)
+        for i in range(1, n + 1):
+            candidate = items[(current_idx + i) % n]
+            if self.file_list.item(candidate, "text").lower().startswith(key):
+                self.file_list.selection_set(candidate)
+                self.file_list.focus(candidate)
+                self.file_list.see(candidate)
+                self.update_details_for_target(self.file_target_from_item(candidate))
+                return "break"
+        return "break"
+
     def on_file_list_down(self, _event=None) -> str:
         if _event is not None and (int(getattr(_event, "state", 0)) & 0x4):
             return None
@@ -485,6 +507,9 @@ class FocusExplorerApp:
 
     def handle_anchor_hotkeys(self, event: tk.Event) -> str | None:
         widget = event.widget
+        if widget is self.file_list:
+            if self.on_file_list_keypress(event) == "break":
+                return "break"
         if widget is self.command_entry:
             return None
 
