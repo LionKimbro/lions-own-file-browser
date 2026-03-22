@@ -21,6 +21,7 @@ def get_state_payload(app: "FocusExplorerApp") -> dict:
             "text": app.notes_text.get("1.0", "end-1c"),
             "open": app.notes_open,
         },
+        "named_paths": app.named_paths,
     }
 
 
@@ -76,6 +77,10 @@ def load_state(app: "FocusExplorerApp") -> None:
         except Exception:
             app.task_index = 0
     app.sync_task_text()
+
+    named = data.get("named_paths", {})
+    if isinstance(named, dict):
+        app.named_paths = {k: v for k, v in named.items() if isinstance(k, str) and isinstance(v, str)}
 
     notes = data.get("notes", {})
     if isinstance(notes, dict):

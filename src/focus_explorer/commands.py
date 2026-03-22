@@ -21,6 +21,10 @@ def execute(app, raw: str) -> None:
         app.show_status("Hierarchy text updated")
     elif cmd == "next-task":
         app.next_task()
+    elif cmd == "name":
+        app.cmd_name(args)
+    elif cmd == "go":
+        app.cmd_go(args)
     elif cmd == "set-root":
         app.cmd_set_root(args)
     elif cmd == "open":
@@ -32,5 +36,5 @@ def execute(app, raw: str) -> None:
         app.show_status("Saved state")
     else:
         app.show_status(
-            "Commands: set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, save"
+            "Commands: name, go, set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, save"
         )

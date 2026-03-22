@@ -85,6 +85,7 @@ class FocusExplorerApp:
 
         self.toast_after_id: str | None = None
         self.notes_open = False
+        self.named_paths: dict[str, str] = {}
 
         self.build_ui()
         self.bind_keys()
@@ -644,6 +645,32 @@ class FocusExplorerApp:
         self.refresh_anchor_panel()
         picker.destroy()
         self.show_toast(f"{key} icon -> {icon}")
+
+    def cmd_name(self, args: list[str]) -> None:
+        if not args:
+            matches = [k for k, v in self.named_paths.items() if v == self.current_dir]
+            if matches:
+                self.show_status(f"Current path named: {', '.join(sorted(matches))}")
+            else:
+                self.show_status("Current path has no name")
+            return
+        label = args[0]
+        self.named_paths[label] = self.current_dir
+        self.show_toast(f"Named: {label}")
+        self.show_status(f"Named '{label}' -> {self.current_dir}")
+
+    def cmd_go(self, args: list[str]) -> None:
+        if not args:
+            names = ", ".join(sorted(self.named_paths)) or "(none)"
+            self.show_status(f"Named paths: {names}")
+            return
+        label = args[0]
+        path = self.named_paths.get(label)
+        if path is None:
+            self.show_status(f"No named path '{label}'")
+            return
+        self.refresh_dir(path)
+        self.file_list.focus_set()
 
     def cmd_set_root(self, args: list[str]) -> None:
         path = " ".join(args).strip() if args else ""
