@@ -86,12 +86,14 @@ class FocusExplorerApp:
         self.toast_after_id: str | None = None
         self.notes_open = False
         self.named_paths: dict[str, str] = {}
+        self._dir_snapshot: list[tuple[str, bool]] = []
 
         self.build_ui()
         self.bind_keys()
         self.load_state()
         self.refresh_dir(self.current_dir, record_history=False)
         self.update_stack_text()
+        self._schedule_dir_poll()
 
     def build_ui(self) -> None:
         ui_panes.build_ui(self)
@@ -236,6 +238,7 @@ class FocusExplorerApp:
 
         self.current_dir = path
         self.path_var.set(path)
+        self._dir_snapshot = self._dir_snapshot_of(path)
 
         for item in self.file_list.get_children():
             self.file_list.delete(item)
@@ -793,6 +796,23 @@ class FocusExplorerApp:
 
     def open_temple_window(self, _event=None) -> None:
         ui_temple_dialog.open_temple_window(self, _event)
+
+    def _dir_snapshot_of(self, path: str) -> list[tuple[str, bool]]:
+        try:
+            return sorted(
+                (e.name, e.is_dir()) for e in os.scandir(path)
+            )
+        except Exception:
+            return []
+
+    def _schedule_dir_poll(self) -> None:
+        self.root.after(5000, self._poll_dir)
+
+    def _poll_dir(self) -> None:
+        current = self._dir_snapshot_of(self.current_dir)
+        if current != self._dir_snapshot:
+            self.refresh_dir(self.current_dir, record_history=False)
+        self._schedule_dir_poll()
 
     def cmd_mkdir(self, args: list[str]) -> None:
         name = " ".join(args).strip() if args else ""
