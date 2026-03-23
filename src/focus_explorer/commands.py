@@ -31,10 +31,14 @@ def execute(app, raw: str) -> None:
         app.cmd_open(args)
     elif cmd == "run":
         app.cmd_run(args)
+    elif cmd == "mkdir":
+        app.cmd_mkdir(args)
+    elif cmd == "rmdir":
+        app.cmd_rmdir(args)
     elif cmd == "save":
         app.save_state()
         app.show_status("Saved state")
     else:
         app.show_status(
-            "Commands: name, go, set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, save"
+            "Commands: name, go, set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, mkdir, rmdir, save"
         )

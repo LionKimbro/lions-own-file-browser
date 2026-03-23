@@ -793,3 +793,43 @@ class FocusExplorerApp:
 
     def open_temple_window(self, _event=None) -> None:
         ui_temple_dialog.open_temple_window(self, _event)
+
+    def cmd_mkdir(self, args: list[str]) -> None:
+        name = " ".join(args).strip() if args else ""
+        if not name:
+            name = simpledialog.askstring("New Directory", "Directory name:", parent=self.root)
+            if not name or not name.strip():
+                return
+            name = name.strip()
+        target = norm(os.path.join(self.current_dir, name))
+        try:
+            os.mkdir(target)
+            self.refresh_dir(self.current_dir, record_history=False)
+            self.show_status(f"Created: {name}")
+        except FileExistsError:
+            self.show_status(f"Already exists: {name}")
+        except Exception as exc:
+            self.show_status(f"mkdir failed: {exc}")
+
+    def cmd_rmdir(self, args: list[str]) -> None:
+        if args:
+            name = " ".join(args).strip()
+        else:
+            selected = self.file_list.selection()
+            if not selected:
+                self.show_status("rmdir: no directory selected")
+                return
+            name = self.file_list.item(selected[0], "text")
+        target = norm(os.path.join(self.current_dir, name))
+        if not os.path.isdir(target):
+            self.show_status(f"Not a directory: {name}")
+            return
+        import tkinter.messagebox as mb
+        if not mb.askyesno("Remove Directory", f"Remove '{name}'? (must be empty)", parent=self.root):
+            return
+        try:
+            os.rmdir(target)
+            self.refresh_dir(self.current_dir, record_history=False)
+            self.show_status(f"Removed: {name}")
+        except OSError as exc:
+            self.show_status(f"rmdir failed: {exc.strerror}")
