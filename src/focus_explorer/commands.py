@@ -38,7 +38,9 @@ def execute(app, raw: str) -> None:
     elif cmd == "save":
         app.save_state()
         app.show_status("Saved state")
+    elif cmd in ("quit", "exit"):
+        app.on_app_close()
     else:
         app.show_status(
-            "Commands: name, go, set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, mkdir, rmdir, save"
+            "Commands: name, go, set-icon, set-focus, add-task, remove-task, set-task, list-tasks, set-hierarchy, next-task, set-root, open, run, mkdir, rmdir, save, quit, exit"
         )
