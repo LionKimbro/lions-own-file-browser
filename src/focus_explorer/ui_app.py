@@ -53,6 +53,48 @@ ICON_LABELS = {
 }
 
 
+def _json_tree(node, indent: int = 0, max_depth: int = 4, max_items: int = 12) -> str:
+    prefix = "  " * indent
+    if indent >= max_depth:
+        return prefix + "..."
+    if isinstance(node, dict):
+        if not node:
+            return prefix + "{}"
+        lines = []
+        for i, (k, v) in enumerate(node.items()):
+            if i >= max_items:
+                lines.append(prefix + f"  ... ({len(node) - max_items} more keys)")
+                break
+            child = _json_tree(v, indent + 1, max_depth, max_items)
+            if "\n" in child:
+                lines.append(prefix + f"  {k}:")
+                lines.append(child)
+            else:
+                lines.append(prefix + f"  {k}: {child.strip()}")
+        return "\n".join(lines)
+    if isinstance(node, list):
+        if not node:
+            return prefix + "[]"
+        lines = []
+        for i, v in enumerate(node):
+            if i >= max_items:
+                lines.append(prefix + f"  ... ({len(node) - max_items} more items)")
+                break
+            child = _json_tree(v, indent + 1, max_depth, max_items)
+            if "\n" in child:
+                lines.append(prefix + f"  [{i}]:")
+                lines.append(child)
+            else:
+                lines.append(prefix + f"  [{i}]: {child.strip()}")
+        return "\n".join(lines)
+    if isinstance(node, str):
+        short = node if len(node) <= 60 else node[:57] + "..."
+        return prefix + f'"{short}"'
+    if node is None:
+        return prefix + "null"
+    return prefix + str(node)
+
+
 @dataclass
 class Anchor:
     path: str
@@ -196,14 +238,25 @@ class FocusExplorerApp:
     def update_preview(self, target: str) -> None:
         path = Path(target)
         if not path.is_file():
-            self.preview_label.configure(image="", text="No preview (not a file)")
+            self.preview_label.configure(image="", text="No preview (not a file)",
+                                         anchor="center", justify="center", wraplength=0)
             self.preview_image_ref = None
             return
 
         ext = path.suffix.lower()
+
+        if ext == ".txt":
+            self._show_text_preview(target)
+            return
+
+        if ext == ".json":
+            self._show_json_preview(target)
+            return
+
         image_exts = {".png", ".gif", ".ppm", ".pgm", ".jpg", ".jpeg", ".bmp", ".webp"}
         if ext not in image_exts:
-            self.preview_label.configure(image="", text="No preview (not an image)")
+            self.preview_label.configure(image="", text="No preview (type unrecognized)",
+                                         anchor="center", justify="center", wraplength=0)
             self.preview_image_ref = None
             return
 
@@ -212,19 +265,58 @@ class FocusExplorerApp:
                 img = Image.open(target)
                 img.thumbnail((280, 280))
                 tk_img = ImageTk.PhotoImage(img)
-                self.preview_label.configure(image=tk_img, text="")
+                self.preview_label.configure(image=tk_img, text="",
+                                             anchor="center", justify="center", wraplength=0)
                 self.preview_image_ref = tk_img
                 return
 
             tk_img = tk.PhotoImage(file=target)
-            self.preview_label.configure(image=tk_img, text="")
+            self.preview_label.configure(image=tk_img, text="",
+                                         anchor="center", justify="center", wraplength=0)
             self.preview_image_ref = tk_img
         except Exception:
             self.preview_label.configure(
                 image="",
                 text="Preview unavailable\n(install Pillow for more formats)",
+                anchor="center", justify="center", wraplength=0,
             )
             self.preview_image_ref = None
+
+    def _show_text_preview(self, target: str) -> None:
+        self.preview_image_ref = None
+        try:
+            with open(target, "r", encoding="utf-8", errors="replace") as f:
+                content = f.read(1024)
+            if not content:
+                text = "Text: (empty file)"
+            else:
+                text = "Text:\n" + content
+        except Exception as exc:
+            text = f"Text: (read error: {exc})"
+        self.preview_label.configure(image="", text=text,
+                                     anchor="nw", justify="left", wraplength=290)
+
+    def _show_json_preview(self, target: str) -> None:
+        self.preview_image_ref = None
+        try:
+            size = Path(target).stat().st_size
+        except Exception:
+            size = 0
+        if size > 150 * 1024:
+            self.preview_label.configure(
+                image="", text="JSON: (file too large to preview)",
+                anchor="center", justify="center", wraplength=0,
+            )
+            return
+        try:
+            import json
+            with open(target, "r", encoding="utf-8", errors="replace") as f:
+                data = json.load(f)
+            tree = "JSON:\n" + _json_tree(data)
+        except Exception as exc:
+            tree = f"JSON: (parse error: {exc})"
+        self.preview_label.configure(image="", text=tree,
+                                     anchor="nw", justify="left", wraplength=290)
 
     def refresh_dir(self, path: str, record_history: bool = True) -> None:
         path = norm(path)
